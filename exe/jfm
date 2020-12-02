@@ -51,8 +51,37 @@ module Jfm
         end
       end
 
+      class Edit < Jfm::CLI::Command
+        desc "Edit the frontmatter for a set of files"
+
+        argument :values, type: :array, require: true, desc: "Values to add/edit"
+
+        example [
+          %q("foo: bar"    # Sets the value of the "foo" post variable to "bar")
+        ]
+
+        def call(dir:, values: [], **)
+          posts = $stdin.each_line.map(&:chomp).map { |f| Post.new(f) }
+          if posts.empty?
+            warn "No files specified"
+            abort
+          end
+
+          posts.each do |post|
+            frontmatter = post.frontmatter
+            values.each do |value|
+              key, value = value.split(":").map(&:strip)
+              frontmatter[key] = value
+            end
+            post.frontmatter = frontmatter
+            post.save
+          end
+        end
+      end
+
       register "version", Version, aliases: ["v", "-v", "--version"]
       register "find",    Find,    aliases: ["f"]
+      register "edit",    Edit,    aliases: ["e"]
     end
   end
 end

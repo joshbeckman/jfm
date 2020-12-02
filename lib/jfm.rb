@@ -30,7 +30,7 @@ module Jfm
     end
 
     def frontmatter
-      YAML.load(raw_frontmatter)
+      @frontmatter ||= YAML.load(raw_frontmatter)
     end
 
     def frontmatter=(new_frontmatter)
@@ -45,6 +45,15 @@ module Jfm
         frontmatter[$1] == $2
       else
         frontmatter.has_key?(query)
+      end
+    end
+
+    def save
+      backmatter = content.lines.drop_while { |l| l.chomp == "---" }.drop_while { |l| l.chomp != "---" }.drop(1).join
+      File.open(filename, "w") do |file|
+        file.write YAML::dump(frontmatter)
+        file.puts "---"
+        file.write backmatter
       end
     end
 
