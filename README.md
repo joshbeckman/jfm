@@ -1,28 +1,85 @@
-# Jfm
+# jfm
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/jfm`. To experiment with that code, run `bin/console` for an interactive prompt.
+`jfm` is a tool for interacting with Jekyll frontmatter from the command
+line.
 
-TODO: Delete this and the text above, and describe your gem
+In Jekyll, all posts have “frontmatter” at the start of them, that
+define certain things about the post:
 
-## Installation
+```
+---
+layout: post
+title: A lovely post
+---
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'jfm'
+Here’s a lovely post
 ```
 
-And then execute:
+The frontmatter is the bit between the `---` and the `---`.
 
-    $ bundle install
+This tool allows you to search for posts based on their frontmatter, and
+then manipulate that frontmatter in certain ways. Basically, it makes
+doing find-and-replace on Jekyll frontmatter a lot easier.
 
-Or install it yourself as:
+## Installation
 
     $ gem install jfm
 
 ## Usage
 
-TODO: Write usage instructions here
+`jfm` offers two commands: `find` and `edit`.
+
+### Finding posts
+
+`find` finds posts that match the given queries. For example, given
+a site with only the example post given above, you could find that post
+in the following ways:
+
+```
+$ jfm find "layout"
+_posts/2020-12-02-lovely-post.markdown
+
+$ jfm find "layout: post"
+_posts/2020-12-02-lovely-post.markdown
+
+$ jfm find "layout: ~page"
+_posts/2020-12-02-lovely-post.markdown
+
+$ jfm find "title: A lovely post"
+_posts/2020-12-02-lovely-post.markdown
+
+$ jfm find "title: A lovely post" "layout: post"
+_posts/2020-12-02-lovely-post.markdown
+```
+
+In short:
+
+* a query of `foo` will match posts that have a variable called `foo`
+  regardless of its value
+* a query of `foo: bar` will match posts that have a variable called
+  `foo` set to the value `bar`
+* a query of `foo: ~bar` will match posts that have a variable called
+  `foo` that is set to any value *other* than `bar`
+* you can pass multiple queries; `find` will return posts that match
+  them all
+
+### Editing frontmatter
+
+`edit` edits the frontmatter to set a given value. For example, to set
+the layout of every single post to “page”, you could:
+
+```
+$ ls _posts/* | jfm edit "layout: page"
+```
+
+This pairs well with the `find` command to only edit certain posts:
+
+```
+$ jfm find "layout: post" | jfm edit "layout: page"
+```
+
+If a variable with that name already exists, it will be replaced; if it
+doesn’t exist, it will be created.
 
 ## Development
 
