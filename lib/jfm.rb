@@ -18,7 +18,7 @@ module Jfm
     private
 
     def post_files
-      Dir[@working_dir + "_posts" + "*"]
+      Dir[@working_dir + "**" + "_posts" + "*"]
     end
   end
 
