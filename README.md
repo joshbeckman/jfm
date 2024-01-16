@@ -48,6 +48,9 @@ _posts/2020-12-02-lovely-post.markdown
 $ jfm find "title: A lovely post"
 _posts/2020-12-02-lovely-post.markdown
 
+$ jfm find "tags contains foobar"
+_posts/2020-12-02-lovely-post.markdown
+
 $ jfm find "title: A lovely post" "layout: post"
 _posts/2020-12-02-lovely-post.markdown
 ```
@@ -60,6 +63,8 @@ In short:
   `foo` set to the value `bar`
 * a query of `foo: ~bar` will match posts that have a variable called
   `foo` that is set to any value *other* than `bar`
+* a query of `foo contains bar` will match posts that have a variable called
+  `foo` containing the value `bar`
 * you can pass multiple queries; `find` will return posts that match
   them all
 

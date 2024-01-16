@@ -44,6 +44,8 @@ module Jfm
         frontmatter[$1] != $2
       when /(.+?):\s*(.+)/
         frontmatter[$1] == $2
+      when /(.+?)\scontains\s*(.+)/
+        frontmatter[$1]&.include? $2
       else
         frontmatter.has_key?(query)
       end

@@ -36,6 +36,7 @@ module Jfm
           %q("layout"         # Finds all posts that have a "layout" value set in their frontmatter),
           %q("layout: post"   # Finds all posts whose "layout" value is set to "post"),
           %q("layout: ~post"  # Finds all posts whose "layout" value is *not* set to "post")
+          %q("tags contains post"  # Finds all posts whose "tag" value contains the entry "post")
         ]
 
         def call(dir:, queries: [], **)
