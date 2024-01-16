@@ -58,7 +58,9 @@ module Jfm
         argument :values, type: :array, require: true, desc: "Values to add/edit"
 
         example [
-          %q("foo: bar"    # Sets the value of the "foo" post variable to "bar")
+          %q("foo: bar"    # Sets the value of the "foo" post variable to "bar"),
+          %q("foo: +bar"   # Adds "bar" to the "foo" post variable),
+          %q("foo: -bar"   # Removes "bar" from the "foo" post variable),
         ]
 
         def call(dir:, values: [], **)
@@ -72,7 +74,17 @@ module Jfm
             frontmatter = post.frontmatter
             values.each do |value|
               key, value = value.split(":").map(&:strip)
-              frontmatter[key] = value
+              if value.start_with? "+"
+                value = value[1..-1]
+                frontmatter[key] ||= []
+                frontmatter[key] << value
+              elsif value.start_with? "-"
+                value = value[1..-1]
+                frontmatter[key] ||= []
+                frontmatter[key].delete(value)
+              else
+                frontmatter[key] = value
+              end
             end
             post.frontmatter = frontmatter
             post.save
