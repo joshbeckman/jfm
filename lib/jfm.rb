@@ -2,7 +2,7 @@ require "pathname"
 require "yaml"
 require "time"
 
-require "jfm/version"
+require_relative "../jfm/version"
 
 module Jfm
   class Error < StandardError; end
