@@ -1,5 +1,6 @@
 require "pathname"
 require "yaml"
+require "time"
 
 require "jfm/version"
 
@@ -30,7 +31,7 @@ module Jfm
     end
 
     def frontmatter
-      @frontmatter ||= YAML.load(raw_frontmatter)
+      @frontmatter ||= YAML.safe_load(raw_frontmatter, permitted_classes: [Date, Time])
     end
 
     def frontmatter=(new_frontmatter)
